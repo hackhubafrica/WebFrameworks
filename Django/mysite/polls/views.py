@@ -16,13 +16,12 @@ def simple_view(request):
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
-    model = Question  # Simplest way to ensure a QuerySet is provided
-   
+    #model = Question  # Simplest way to ensure a QuerySet is provided
+    
     def get_queryset(self):
-        print("get_queryset called") 
-        #return Question.objects.all()
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:2]
-
+        questions = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        print(f"Fetched questions: {questions}")
+        return questions
 
 class DetailView(generic.DetailView):
     model = Question
