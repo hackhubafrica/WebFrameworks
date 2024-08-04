@@ -1,27 +1,28 @@
 #Use generic views: Less code is better
 
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from .models import Choice, Question
 from django.utils import timezone
 
+
+
+def simple_view(request):
+    return HttpResponse("Simple view works")
+
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
+    model = Question  # Simplest way to ensure a QuerySet is provided
+   
     def get_queryset(self):
-        """
-        Return the last five published questions (not including those set to be
-        published in the future).
-        """
+        print("get_queryset called") 
+        #return Question.objects.all()
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:2]
 
-    """
-    def get_queryset(self):
-        #Return the last five published questions.
-        return Question.objects.order_by('-pub_date')[:5]
-    """
 
 class DetailView(generic.DetailView):
     model = Question
